@@ -7,6 +7,7 @@ import org.apache.commons.logging.LogFactory;
 
 import com.alipay.api.conf.AlipayConfigure;
 import com.alipay.api.internal.util.AlipaySignature;
+import com.alipay.api.internal.util.StringUtils;
 import com.alipay.api.request.AlipayFundTransToaccountTransferRequest;
 import com.alipay.api.request.AlipayTradeAppPayRequest;
 import com.alipay.api.response.AlipayFundTransToaccountTransferResponse;
@@ -65,16 +66,20 @@ public class AliPay {
      */
     public static AlipayFundTransToaccountTransferResponse toaccountTransfer(Map<String, Object> bizContent) throws AlipayApiException{
     	
-    	logger.debug("##in## bizContent:="+new Gson().toJson(bizContent));
+    	Gson gson = new Gson();
+    	
+    	String bizContentStr = gson.toJson(bizContent);
+    	
+    	logger.debug("##in## bizContent:="+bizContentStr);
     	
     	AlipayFundTransToaccountTransferRequest request = new AlipayFundTransToaccountTransferRequest();
-    	request.setBizContent(new Gson().toJson(bizContent));
+    	request.setBizContent(bizContentStr);
     	AlipayFundTransToaccountTransferResponse response = alipayClient.execute(request);
-    	if(response.isSuccess()){
-    		logger.info("##out## response:="+new Gson().toJson(response));
+    	if(!StringUtils.isEmpty(response.getPayDate())){
+    		logger.info("##out## response:="+gson.toJson(response));
     		return response;
     	} else {
-    		logger.error("##out## response:="+new Gson().toJson(response));
+    		logger.error("##out## response:="+gson.toJson(response));
     		throw new AlipayApiException(response.getSubMsg());
     	}
     }
