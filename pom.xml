@@ -1,8 +1,8 @@
 <project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
   <modelVersion>4.0.0</modelVersion>
   <groupId>com.cscc.pay</groupId>
-  <artifactId>com.cscc.alipay</artifactId><!-- alipay-sdk-java20170615110434-source -->
-  <version>2.0.2</version>
+  <artifactId>alipay-sdk</artifactId><!-- alipay-sdk-java20170615110434-source -->
+  <version>1.0.0</version>
   
   <dependencies>
   	<!-- https://mvnrepository.com/artifact/junit/junit -->
