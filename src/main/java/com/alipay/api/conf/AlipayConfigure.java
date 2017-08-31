@@ -19,8 +19,8 @@ public class AlipayConfigure {
 	// 页面跳转同步通知页面路径 需http://格式的完整路径，不能加?id=123这类自定义参数，必须外网可以正常访问	
     private static String return_url = resource.getString("return_url");
 
-    private static String APP_PRIVATE_KEY = EncryptUtil.getInstance().AESdecode(resource.getString("APP_PRIVATE_KEY"), "cscc#");
-//    private static String APP_PRIVATE_KEY = resource.getString("APP_PRIVATE_KEY");
+//  private static String APP_PRIVATE_KEY = EncryptUtil.getInstance().AESdecode(resource.getString("APP_PRIVATE_KEY"), "cscc#");
+    private static String APP_PRIVATE_KEY = resource.getString("APP_PRIVATE_KEY");
     private static String ALIPAY_PUBLIC_KEY  = resource.getString("ALIPAY_PUBLIC_KEY");
     private static String SIGN_TYPE = "RSA2";
     private static String CHARSET = "utf-8";
