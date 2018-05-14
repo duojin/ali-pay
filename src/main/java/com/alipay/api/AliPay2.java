@@ -9,7 +9,9 @@ import com.alipay.api.conf.AlipayConfigure;
 import com.alipay.api.internal.util.AlipaySignature;
 import com.alipay.api.request.AlipayFundTransToaccountTransferRequest;
 import com.alipay.api.request.AlipayTradeAppPayRequest;
+import com.alipay.api.request.AlipayTradeRefundRequest;
 import com.alipay.api.response.AlipayFundTransToaccountTransferResponse;
+import com.alipay.api.response.AlipayTradeRefundResponse;
 import com.google.gson.Gson;
 
 
@@ -72,7 +74,29 @@ public class AliPay2 {
     		throw new AlipayApiException(response.getSubMsg());
     	}
     }
-    
+
+    /**
+     * 退款接口
+     * @param bizContent
+     * @return
+     * @throws AlipayApiException
+     */
+    public static AlipayTradeRefundResponse refund(Map<String, Object> bizContent,AliPaySettings settings) throws AlipayApiException{
+    	
+    	logger.debug("##in## bizContent:="+new Gson().toJson(bizContent));
+    	AlipayClient alipayClient = getAlipayClient(settings);
+    	
+    	AlipayTradeRefundRequest request = new AlipayTradeRefundRequest();
+    	request.setBizContent(new Gson().toJson(bizContent));
+    	AlipayTradeRefundResponse response = alipayClient.execute(request);
+    	if(response.isSuccess()){
+    		logger.info("##out## response:="+new Gson().toJson(response));
+    		return response;
+    	} else {
+    		logger.error("##out## response:="+new Gson().toJson(response));
+    		throw new AlipayApiException(response.getSubMsg());
+    	}
+    }
 	/**
      * 验证签名
      * @param paramsMap 回传参数带签名

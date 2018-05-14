@@ -2,7 +2,7 @@
   <modelVersion>4.0.0</modelVersion>
   <groupId>com.cscc.pay</groupId>
   <artifactId>alipay-sdk</artifactId><!-- alipay-sdk-java20170615110434-source -->
-  <version>1.0.1</version>
+  <version>1.0.2</version>
   
   <dependencies>
   	<!-- https://mvnrepository.com/artifact/junit/junit -->
@@ -28,7 +28,7 @@
 
 <properties>
 	<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
-	<repository.host>http://218.26.184.106:20000/</repository.host>   
+	<repository.host>http://www.zhdconet.com:20000/</repository.host>   
 </properties>
 <distributionManagement>
 	<repository>

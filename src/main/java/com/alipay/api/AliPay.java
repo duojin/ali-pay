@@ -9,7 +9,9 @@ import com.alipay.api.conf.AlipayConfigure;
 import com.alipay.api.internal.util.AlipaySignature;
 import com.alipay.api.request.AlipayFundTransToaccountTransferRequest;
 import com.alipay.api.request.AlipayTradeAppPayRequest;
+import com.alipay.api.request.AlipayTradeRefundRequest;
 import com.alipay.api.response.AlipayFundTransToaccountTransferResponse;
+import com.alipay.api.response.AlipayTradeRefundResponse;
 import com.google.gson.Gson;
 
 
@@ -70,6 +72,28 @@ public class AliPay {
     	AlipayFundTransToaccountTransferRequest request = new AlipayFundTransToaccountTransferRequest();
     	request.setBizContent(new Gson().toJson(bizContent));
     	AlipayFundTransToaccountTransferResponse response = alipayClient.execute(request);
+    	if(response.isSuccess()){
+    		logger.info("##out## response:="+new Gson().toJson(response));
+    		return response;
+    	} else {
+    		logger.error("##out## response:="+new Gson().toJson(response));
+    		throw new AlipayApiException(response.getSubMsg());
+    	}
+    }
+    
+    /**
+     * 退款接口
+     * @param bizContent
+     * @return
+     * @throws AlipayApiException
+     */
+    public static AlipayTradeRefundResponse refund(Map<String, Object> bizContent) throws AlipayApiException{
+    	
+    	logger.debug("##in## bizContent:="+new Gson().toJson(bizContent));
+    	
+    	AlipayTradeRefundRequest request = new AlipayTradeRefundRequest();
+    	request.setBizContent(new Gson().toJson(bizContent));
+    	AlipayTradeRefundResponse response = alipayClient.execute(request);
     	if(response.isSuccess()){
     		logger.info("##out## response:="+new Gson().toJson(response));
     		return response;
