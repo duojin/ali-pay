@@ -6,6 +6,9 @@ import java.util.UUID;
 
 import org.junit.Test;
 
+import com.alipay.api.response.AlipayTradeQueryResponse;
+import com.google.gson.Gson;
+
 public class TestAliPay {
 
 	@Test
@@ -26,5 +29,16 @@ public class TestAliPay {
         System.out.println(rsp);
         
 	}
+	
+	@Test
+	public void TestTradeUqery() throws AlipayApiException{
+		Map<String, Object> bizContent = new HashMap();
+        bizContent.put("out_trade_no", "1000085401920190611616");
+        AlipayTradeQueryResponse rsp = AliPay.queryTrade(bizContent);
+        
+        System.out.println(new Gson().toJson(rsp));
+        
+	}
+	
 	
 }

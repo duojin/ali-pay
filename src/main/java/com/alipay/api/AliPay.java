@@ -9,8 +9,10 @@ import com.alipay.api.conf.AlipayConfigure;
 import com.alipay.api.internal.util.AlipaySignature;
 import com.alipay.api.request.AlipayFundTransToaccountTransferRequest;
 import com.alipay.api.request.AlipayTradeAppPayRequest;
+import com.alipay.api.request.AlipayTradeQueryRequest;
 import com.alipay.api.request.AlipayTradeRefundRequest;
 import com.alipay.api.response.AlipayFundTransToaccountTransferResponse;
+import com.alipay.api.response.AlipayTradeQueryResponse;
 import com.alipay.api.response.AlipayTradeRefundResponse;
 import com.google.gson.Gson;
 
@@ -113,6 +115,22 @@ public class AliPay {
 
         return AlipaySignature.rsaCheckV1(paramsMap, AlipayConfigure.getALIPAY_PUBLIC_KEY(),
         		AlipayConfigure.getCHARSET(), AlipayConfigure.getSIGN_TYPE());
+    }
+
+    public static AlipayTradeQueryResponse queryTrade(Map<String, Object> bizContent) throws AlipayApiException {
+    	
+    	logger.debug("##in## paramsMap:="+new Gson().toJson(bizContent));
+    	
+    	AlipayTradeQueryRequest request = new AlipayTradeQueryRequest();
+    	request.setBizContent(new Gson().toJson(bizContent));
+    	AlipayTradeQueryResponse response = alipayClient.execute(request);
+    	if(response.isSuccess()){
+    		logger.info("##out## response:="+new Gson().toJson(response));
+    		return response;
+    	} else {
+    		logger.error("##out## response:="+new Gson().toJson(response));
+    		throw new AlipayApiException(response.getSubMsg());
+    	}
     }
     
     public static String notifyResponse(Response res){
