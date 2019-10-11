@@ -1,16 +1,21 @@
 package com.alipay.api;
 
+import java.io.File;
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.io.InputStream;
+import java.net.HttpURLConnection;
+import java.net.MalformedURLException;
+import java.net.URL;
 import java.util.Map;
 
+import com.alipay.api.request.*;
+import com.alipay.api.response.AlipayDataDataserviceBillDownloadurlQueryResponse;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 
 import com.alipay.api.conf.AlipayConfigure;
 import com.alipay.api.internal.util.AlipaySignature;
-import com.alipay.api.request.AlipayFundTransToaccountTransferRequest;
-import com.alipay.api.request.AlipayTradeAppPayRequest;
-import com.alipay.api.request.AlipayTradeQueryRequest;
-import com.alipay.api.request.AlipayTradeRefundRequest;
 import com.alipay.api.response.AlipayFundTransToaccountTransferResponse;
 import com.alipay.api.response.AlipayTradeQueryResponse;
 import com.alipay.api.response.AlipayTradeRefundResponse;
@@ -132,6 +137,23 @@ public class AliPay {
     		throw new AlipayApiException(response.getSubMsg());
     	}
     }
+
+	public static void downloadBill(Map<String, Object> bizContent,String filePath) throws AlipayApiException {
+
+		bizContent.put("bill_type", "trade");
+		logger.debug("##in## paramsMap:="+new Gson().toJson(bizContent));
+
+		AlipayDataDataserviceBillDownloadurlQueryRequest request = new AlipayDataDataserviceBillDownloadurlQueryRequest();
+		request.setBizContent(new Gson().toJson(bizContent));
+		AlipayDataDataserviceBillDownloadurlQueryResponse response = alipayClient.execute(request);
+		if(response.isSuccess()){
+			logger.info("##out## response:="+new Gson().toJson(response));
+			downloadBillFile(filePath,response.getBillDownloadUrl());
+		} else {
+			logger.error("##out## response:="+new Gson().toJson(response));
+			throw new AlipayApiException(response.getSubMsg());
+		}
+	}
     
     public static String notifyResponse(Response res){
     	return res.getResponse();
@@ -152,4 +174,50 @@ public class AliPay {
 		}
     	
     }
+
+    private static void downloadBillFile(String filePath, String urlStr){
+		//将接口返回的对账单下载地址传入urlStr
+		//String urlStr = "http://dwbillcenter.alipay.com/downloadBillFile.resource?bizType=X&userId=X&fileType=X&bizDates=X&downloadFileName=X&fileId=X";
+//指定希望保存的文件路径
+		//String filePath = "/Users/fund_bill_20160405.zip";
+		URL url = null;
+		HttpURLConnection httpUrlConnection = null;
+		InputStream fis = null;
+		FileOutputStream fos = null;
+		try {
+			url = new URL(urlStr);
+			httpUrlConnection = (HttpURLConnection) url.openConnection();
+			httpUrlConnection.setConnectTimeout(5 * 1000);
+			httpUrlConnection.setDoInput(true);
+			httpUrlConnection.setDoOutput(true);
+			httpUrlConnection.setUseCaches(false);
+			httpUrlConnection.setRequestMethod("GET");
+			httpUrlConnection.setRequestProperty("Charsert", "UTF-8");
+			httpUrlConnection.connect();
+			fis = httpUrlConnection.getInputStream();
+			byte[] temp = new byte[1024];
+			int b;
+			fos = new FileOutputStream(new File(filePath));
+			while ((b = fis.read(temp)) != -1) {
+				fos.write(temp, 0, b);
+				fos.flush();
+			}
+		} catch (Exception e) {
+			e.printStackTrace();
+		}  finally {
+			try {
+				if(fis!=null){
+					fis.close();
+				}
+				if(fos!=null){
+					fos.close();
+				}
+				if(httpUrlConnection!=null) {
+					httpUrlConnection.disconnect();
+				}
+			} catch (IOException e) {
+				e.printStackTrace();
+			}
+		}
+	}
 }

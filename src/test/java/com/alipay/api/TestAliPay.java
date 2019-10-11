@@ -39,6 +39,11 @@ public class TestAliPay {
         System.out.println(new Gson().toJson(rsp));
         
 	}
-	
+    @Test
+    public void TestDownloadBills() throws AlipayApiException{
+        Map<String, Object> bizContent = new HashMap();
+        bizContent.put("bill_date", "2019-09-30");
+        AliPay.downloadBill(bizContent,"E:/a.zip");
+    }
 	
 }
